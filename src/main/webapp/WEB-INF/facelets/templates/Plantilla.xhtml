@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="jakarta.faces.html"
+	xmlns:ui="jakarta.faces.facelets">
+	<h:head>
+		<meta charset="UTF-8" />
+		<title><ui:insert name="titulo">Título por definir...</ui:insert></title>
+	</h:head>
+	<h:body>
+		<h1 style="text-align: center">
+			<!--
+			Esta imagen se carga desde un servidor externo.
+			Ver la nota al final del apartado: ¿es buena idea?
+			
+			<img 
+				src="http://www.ehu.eus/documents/340468/5849813/Biling%C3%BCe_positivo_baja.jpg"
+				width="500" 
+				height="70"
+				alt="Universidad del País Vasco - Euskal Herriko Unibertsitatea"
+			/>
+			-->
+			<h:graphicImage name="logo.jpg" library="images" alt="Universidad del País Vasco"/>
+		</h1>
+		<h:panelGrid columns="2" align="center" border="3" cellpadding="10" cellspacing="1">
+			<h:panelGrid columns="1" style="background-color: lightblue; color:blue">
+				<ui:include src="Menu.xhtml" />
+			</h:panelGrid>
+			<h:panelGrid columns="1">
+				<ui:insert name="cuerpo">En construcción...</ui:insert>
+			</h:panelGrid>
+		</h:panelGrid>
+		<ui:insert name="pie-pagina">
+			<h4 style="color: blue; text-align: center">&#169; Ingeniería del Software II</h4>
+		</ui:insert>
+	</h:body>
+</html>
