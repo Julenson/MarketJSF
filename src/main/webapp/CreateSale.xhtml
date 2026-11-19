@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Crear Nuevo Producto</title>
+    <h:outputStylesheet library="css" name="style.css" />
+</h:head>
+
+<h:body>
+    <div class="form-container">
+        <!-- Importante: enctype="multipart/form-data" es obligatorio para subir archivos -->
+        <h:form id="formCreateSale" enctype="multipart/form-data">
+            <p:growl id="messages" showDetail="false" life="4000" />
+
+            <p:panel header="Publicar Nuevo Producto en Venta">
+                <h:panelGrid columns="2" styleClass="field-grid" columnClasses="label-col,input-col">
+                    <p:outputLabel for="title" value="Título:" />
+                    <p:inputText id="title" value="#{createSale.title}" 
+                                 required="true" requiredMessage="El título es obligatorio."
+                                 placeholder="Ej. Bicicleta de montaña" styleClass="full-width" />
+                    <p:outputLabel for="description" value="Descripción:" />
+                    <p:inputTextarea id="description" value="#{createSale.description}" 
+                                     rows="4" required="true" requiredMessage="La descripción es obligatoria."
+                                     placeholder="Describe el estado y características del producto..." 
+                                     styleClass="full-width" />
+                    <p:outputLabel for="price" value="Precio (€):" />
+                    <p:inputNumber id="price" value="#{createSale.price}" 
+                                   symbol=" €" symbolPosition="s" 
+                                   decimalSeparator="," thousandSeparator="."
+                                   minValue="0" styleClass="full-width" />
+                    <p:outputLabel for="pubDate" value="Fecha de publicación:" />
+                    <p:datePicker id="pubDate" value="#{createSale.publicationDate}" 
+                                  pattern="dd/MM/yyyy" showIcon="true">
+                        <p:ajax event="dateSelect" listener="#{createSale.onDateSelect}" update="messages" />
+                    </p:datePicker>
+                    <p:outputLabel for="status" value="Estado:" />
+                    <p:selectOneMenu id="status" value="#{createSale.statusSelected}" styleClass="full-width">
+                        <f:selectItems value="#{createSale.statusList}" />
+                        <p:ajax event="change" listener="#{createSale.listener}" update="messages" />
+                    </p:selectOneMenu>
+                    <p:outputLabel for="sellerMail" value="Email del vendedor:" />
+                    <p:inputText id="sellerMail" value="#{createSale.sellerMail}" 
+                                 placeholder="vendedor@ejemplo.com" styleClass="full-width" />
+
+                    <p:outputLabel for="fileUpload" value="Imagen del producto:" />
+                    <p:fileUpload id="fileUpload" value="#{createSale.uploadedFile}" 
+                                  mode="simple" skinSimple="true" label="Seleccionar archivo"
+                                  allowTypes="/(\.|\/)(gif|jpe?g|png|webp)$/" />
+
+                </h:panelGrid>
+
+                <f:facet name="footer">
+                    <div style="text-align: right; margin-top: 10px;">
+                        <p:commandButton value="Crear Producto" 
+                                         action="#{createSale.crearProducto}" 
+                                         ajax="false" 
+                                         icon="pi pi-check" />
+                    </div>
+                </f:facet>
+            </p:panel>
+
+        </h:form>
+    </div>
+</h:body>
+</html>
