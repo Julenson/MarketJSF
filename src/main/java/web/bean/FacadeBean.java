@@ -16,4 +16,5 @@ public class FacadeBean {
 	public static BLFacade getBussinesLogic() {
 		return facadeInterface;
 	}
+	
 }

@@ -1,11 +1,28 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="jakarta.faces.html">
-<h:head>
-	<meta charset="UTF-8"/>
-	<title>MarketJSF</title>
-</h:head>
-<h:body>
-	<h:outputText value="Selecciona una de las opciones"/>
-</h:body>
+<html lang="es"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core">
+	<f:view locale="#{index.locale}">
+		<h:head>
+			<meta charset="UTF-8"/>
+			<title>#{msg['MainGUI.MainTitle']}</title>
+		</h:head>
+		<h:body>
+			<h:form id="indexForm">
+				<h2>#{msg['MainGUI.MainTitle']}</h2>
+				<h:selectOneMenu id="languages" value="#{index.language}">
+					<f:selectItems value="#{index.languages}"/>
+					<f:ajax event="change" listener="#{index.listener}" render="@all"/>
+				</h:selectOneMenu>
+				<h3>#{msg['MainGUI.SelectOption']}</h3>
+				<p>
+					<h:commandButton value="#{msg['MainGUI.QuerySales']}" action="querySales"/>
+				</p>
+				<p>
+					<h:commandButton value="#{msg['MainGUI.CreateSale']}" action="createSale"/>
+				</p>
+			</h:form>
+		</h:body>
+	</f:view>
 </html>

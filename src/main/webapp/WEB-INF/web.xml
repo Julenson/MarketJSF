@@ -13,6 +13,11 @@
 		<param-value>true</param-value>
 	</context-param>
 
+	<context-param>
+		<param-name>jakarta.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
 	<!-- Configuración del Faces Servlet -->
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
