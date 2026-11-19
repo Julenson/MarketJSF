@@ -18,7 +18,6 @@ import jakarta.inject.Named;
 
 import businessLogic.BLFacade;
 import configuration.UtilDate;
-import gui.MainGUI;
 import gui.Utils;
 
 @Named("createSale")
@@ -31,24 +30,32 @@ public class CreateSaleBean implements Serializable {
     private float price;
     private Date publicationDate;
     private String sellerMail;
-    
+
     private String statusSelected;
-    private static List<String> statusList = new ArrayList<String>();
-    
+    private List<String> statusList = new ArrayList<String>();
+
     private UploadedFile uploadedFile;
 
     public CreateSaleBean() {
         publicationDate = new Date();
         try {
-            statusList = Utils.getStatus();
-        } catch (Exception e) {
-            if (statusList.isEmpty()) {
-                statusList.add("Disponible");
-                statusList.add("Reservado");
-                statusList.add("Vendido");
+            List<String> loadedStatus = Utils.getStatus();
+            if (loadedStatus != null && !loadedStatus.isEmpty()) {
+                statusList = loadedStatus;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (!statusList.isEmpty() && statusSelected == null) {
+
+        // Si Utils.getStatus() devolvió null, lista vacía o lanzó excepción, rellenamos por defecto
+        if (statusList == null || statusList.isEmpty()) {
+            statusList = new ArrayList<String>();
+            statusList.add("Disponible");
+            statusList.add("Reservado");
+            statusList.add("Vendido");
+        }
+
+        if (statusSelected == null) {
             statusSelected = statusList.get(0);
         }
     }
@@ -67,19 +74,19 @@ public class CreateSaleBean implements Serializable {
         }
 
         try {
-            BLFacade facade = MainGUI.getBusinessLogic();
+            BLFacade facade = FacadeBean.getBussinesLogic();
             int numStatus = statusList.indexOf(statusSelected);
-            
-            // Conversión del archivo subido con StandardCopyOption corregido
+
+            // Conversión del archivo subido
             java.io.File targetFile = convertUploadedFileToFile(uploadedFile);
 
             facade.createSale(title, description, numStatus, price, UtilDate.trim(publicationDate), sellerMail, targetFile);
 
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito: Producto creado correctamente.", null));
-            
+
             return "ok";
-            
+
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al crear: " + e.getMessage(), null));
@@ -98,7 +105,9 @@ public class CreateSaleBean implements Serializable {
     }
 
     private java.io.File convertUploadedFileToFile(UploadedFile file) {
-        if (file == null) return null;
+        if (file == null || file.getFileName() == null || file.getFileName().isEmpty()) {
+            return null;
+        }
         try {
             java.io.File tempFile = java.io.File.createTempFile("upload_", file.getFileName());
             try (java.io.InputStream input = file.getInputStream()) {
@@ -131,7 +140,7 @@ public class CreateSaleBean implements Serializable {
     public void setStatusSelected(String statusSelected) { this.statusSelected = statusSelected; }
 
     public List<String> getStatusList() { return statusList; }
-    public void setStatusList(List<String> statusList) { CreateSaleBean.statusList = statusList; }
+    public void setStatusList(List<String> statusList) { this.statusList = statusList; }
 
     public UploadedFile getUploadedFile() { return uploadedFile; }
     public void setUploadedFile(UploadedFile uploadedFile) { this.uploadedFile = uploadedFile; }
